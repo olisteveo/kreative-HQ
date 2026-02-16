@@ -1,0 +1,148 @@
+.office-canvas-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+  overflow: hidden;
+}
+
+.office-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ui-panel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  max-width: 320px;
+  backdrop-filter: blur(10px);
+}
+
+.ui-panel h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #ff6b6b, #feca57);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ui-panel p {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.task-log {
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.task-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-log::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+.task-log::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+.task-entry {
+  padding: 6px 0;
+  border-bottom: 1px solid #222;
+  line-height: 1.4;
+}
+
+.task-entry:last-child {
+  border-bottom: none;
+}
+
+.controls {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.controls button {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.controls button:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.controls button:active {
+  transform: scale(0.95);
+}
+
+.stats-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  backdrop-filter: blur(10px);
+}
+
+.stats-panel h3 {
+  color: #fff;
+  font-size: 14px;
+  margin: 8px 0;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .ui-panel {
+    max-width: 250px;
+    padding: 15px;
+  }
+  
+  .ui-panel h1 {
+    font-size: 20px;
+  }
+  
+  .controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    bottom: 20px;
+  }
+  
+  .controls button {
+    padding: 12px 20px;
+    font-size: 12px;
+  }
+  
+  .stats-panel {
+    top: auto;
+    bottom: 100px;
+    right: 10px;
+  }
+}
