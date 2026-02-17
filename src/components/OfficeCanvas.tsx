@@ -158,15 +158,13 @@ const AVAILABLE_MODELS = [
 const DEFAULT_DESKS: Zone[] = [
   { id: 'ceo', x: 0.30, y: 0.10, w: 200, h: 100, color: '#ffd700', label: 'CEO Office' },
   { id: 'ops', x: 0.70, y: 0.10, w: 200, h: 100, color: '#ff6b6b', label: 'Operations' },
-  { id: 'desk1', x: 0.30, y: 0.26, w: 200, h: 100, color: '#feca57', label: 'Desk 1' },
-  { id: 'desk2', x: 0.70, y: 0.26, w: 200, h: 100, color: '#48dbfb', label: 'Desk 2' },
-  { id: 'desk3', x: 0.30, y: 0.42, w: 200, h: 100, color: '#ff9ff3', label: 'Desk 3' },
-  { id: 'desk4', x: 0.70, y: 0.42, w: 200, h: 100, color: '#54a0ff', label: 'Desk 4' },
-  { id: 'desk5', x: 0.30, y: 0.58, w: 200, h: 100, color: '#1dd1a1', label: 'Desk 5' },
-  { id: 'desk6', x: 0.70, y: 0.58, w: 200, h: 100, color: '#a29bfe', label: 'Desk 6' },
-  { id: 'desk7', x: 0.30, y: 0.74, w: 200, h: 100, color: '#fd79a8', label: 'Desk 7' },
-  { id: 'desk8', x: 0.70, y: 0.74, w: 200, h: 100, color: '#00b894', label: 'Desk 8' },
-  { id: 'meeting', x: 0.5, y: 0.90, w: 400, h: 120, color: '#74b9ff', label: 'Meeting Room' }
+  { id: 'desk1', x: 0.30, y: 0.28, w: 200, h: 100, color: '#feca57', label: 'Desk 1' },
+  { id: 'desk2', x: 0.70, y: 0.28, w: 200, h: 100, color: '#48dbfb', label: 'Desk 2' },
+  { id: 'desk3', x: 0.30, y: 0.46, w: 200, h: 100, color: '#ff9ff3', label: 'Desk 3' },
+  { id: 'desk4', x: 0.70, y: 0.46, w: 200, h: 100, color: '#54a0ff', label: 'Desk 4' },
+  { id: 'desk5', x: 0.30, y: 0.64, w: 200, h: 100, color: '#1dd1a1', label: 'Desk 5' },
+  { id: 'desk6', x: 0.70, y: 0.64, w: 200, h: 100, color: '#a29bfe', label: 'Desk 6' },
+  { id: 'meeting', x: 0.5, y: 0.85, w: 400, h: 120, color: '#74b9ff', label: 'Meeting Room' }
 ];
 
 // Desk to model assignments - users configure this
@@ -181,10 +179,8 @@ const DEFAULT_ASSIGNMENTS: DeskAssignment[] = [
   { deskId: 'desk2', modelId: 'claude-sonnet-4', customName: 'Writing Desk' },
   { deskId: 'desk3', modelId: 'kimi-k2.5', customName: 'Dev Desk' },
   { deskId: 'desk4', modelId: 'gpt-4.1', customName: 'Analysis Desk' },
-  { deskId: 'desk5', modelId: 'gpt-4.1-mini', customName: 'Quick Tasks' },
-  { deskId: 'desk6', modelId: 'codex', customName: 'Code Desk' },
-  { deskId: 'desk7', modelId: 'nano-banana', customName: 'Creative Desk' },
-  { deskId: 'desk8', modelId: 'claude-sonnet-4', customName: 'Review Desk' }
+  { deskId: 'desk5', modelId: 'codex', customName: 'Code Desk' },
+  { deskId: 'desk6', modelId: 'nano-banana', customName: 'Creative Desk' }
 ];
 
 const INITIAL_AGENTS: Agent[] = [
