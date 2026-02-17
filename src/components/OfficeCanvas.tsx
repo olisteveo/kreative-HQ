@@ -959,9 +959,15 @@ const OfficeCanvas: React.FC = () => {
       <div className="top-nav">
         <button onClick={() => setShowTaskForm(true)}>New Task</button>
         <button onClick={() => setShowMeetingRoom(true)}>Meeting Room</button>
-        <button onClick={() => setShowSettings(true)}>Settings</button>
+        <button onClick={() => setShowSettings(true)}>Setup</button>
         <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
         <button onClick={resetOffice}>Reset</button>
+        <div className="user-icon" onClick={() => setShowSettings(true)} title="Account Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
       </div>
 
       <div className="left-sidebar">
@@ -1471,7 +1477,7 @@ const OfficeCanvas: React.FC = () => {
         <div className="task-form-overlay" onClick={() => setShowSettings(false)}>
           <div className="task-form" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px', width: '90%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2>Settings</h2>
+              <h2>Setup</h2>
               <button className="close-btn" onClick={() => setShowSettings(false)}>✕</button>
             </div>
 
