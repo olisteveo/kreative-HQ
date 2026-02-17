@@ -144,24 +144,24 @@ const DEFAULT_SUBSCRIPTIONS: Subscription[] = [
 ];
 
 const ZONES: Record<string, Zone> = {
-  ceo: { x: 0.28, y: 0.10, w: 200, h: 120, color: '#ffd700', label: '👑 CEO Office' },
-  ops: { x: 0.72, y: 0.10, w: 200, h: 120, color: '#ff6b6b', label: '🦅 Operations' },
-  creative: { x: 0.15, y: 0.55, w: 260, h: 160, color: '#feca57', label: '🍌 Nano Banana Studio' },
-  research: { x: 0.85, y: 0.55, w: 240, h: 160, color: '#48dbfb', label: '🔬 Research Lab' },
-  engineering: { x: 0.5, y: 0.82, w: 600, h: 200, color: '#1dd1a1', label: '💻 Engineering Floor' },
-  meeting: { x: 0.5, y: 0.55, w: 180, h: 120, color: '#a29bfe', label: '📅 Meeting Room' }
+  ceo: { x: 0.35, y: 0.12, w: 180, h: 100, color: '#ffd700', label: 'CEO Office' },
+  ops: { x: 0.65, y: 0.12, w: 180, h: 100, color: '#ff6b6b', label: 'Operations' },
+  creative: { x: 0.25, y: 0.45, w: 220, h: 140, color: '#feca57', label: 'Nano Banana Studio' },
+  research: { x: 0.75, y: 0.45, w: 220, h: 140, color: '#48dbfb', label: 'Research Lab' },
+  engineering: { x: 0.5, y: 0.78, w: 500, h: 180, color: '#1dd1a1', label: 'Engineering Floor' },
+  meeting: { x: 0.5, y: 0.45, w: 160, h: 100, color: '#a29bfe', label: 'Meeting Room' }
 };
 
 const INITIAL_AGENTS: Agent[] = [
   { id: 'ceo', name: 'You', role: 'CEO', zone: 'ceo', x: 0, y: 0, color: '#ffd700', emoji: '👑', avatar: '👔', deskOffset: { x: 0, y: 10 }, isWorking: false },
   { id: 'ops', name: 'OpenClaw', role: 'Operations Manager', zone: 'ops', x: 0, y: 0, color: '#ff6b6b', emoji: '🦅', avatar: '📊', deskOffset: { x: 0, y: 10 }, isWorking: false },
-  { id: 'creative', name: 'Nano Banana', role: 'Creative Manager', zone: 'creative', x: 0, y: 0, color: '#feca57', emoji: '🍌', avatar: '🎨', deskOffset: { x: -60, y: 20 }, isWorking: false },
-  { id: 'research1', name: 'Claude Sonnet', role: 'Researcher', zone: 'research', x: 0, y: 0, color: '#48dbfb', emoji: '🔬', avatar: '🔍', deskOffset: { x: -50, y: 20 }, isWorking: false },
-  { id: 'research2', name: 'Kimi K2.5', role: 'Researcher/Dev', zone: 'research', x: 0, y: 0, color: '#48dbfb', emoji: '🧠', avatar: '📚', deskOffset: { x: 50, y: 20 }, isWorking: false },
-  { id: 'dev1', name: 'Claude Opus', role: 'Senior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '💻', avatar: '⚡', deskOffset: { x: -200, y: 30 }, isWorking: false },
-  { id: 'dev2', name: 'Codex', role: 'Senior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '⚡', avatar: '🔧', deskOffset: { x: -70, y: 30 }, isWorking: false },
-  { id: 'dev3', name: 'Kimi K2.5', role: 'Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '🎯', avatar: '🚀', deskOffset: { x: 70, y: 30 }, isWorking: false },
-  { id: 'dev4', name: 'GPT 4.1', role: 'Junior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '🌱', avatar: '📖', deskOffset: { x: 200, y: 30 }, isWorking: false }
+  { id: 'creative', name: 'Nano Banana', role: 'Creative Manager', zone: 'creative', x: 0, y: 0, color: '#feca57', emoji: '🍌', avatar: '🎨', deskOffset: { x: -40, y: 15 }, isWorking: false },
+  { id: 'research1', name: 'Claude Sonnet', role: 'Researcher', zone: 'research', x: 0, y: 0, color: '#48dbfb', emoji: '🔬', avatar: '🔍', deskOffset: { x: -40, y: 15 }, isWorking: false },
+  { id: 'research2', name: 'Kimi K2.5', role: 'Researcher/Dev', zone: 'research', x: 0, y: 0, color: '#48dbfb', emoji: '🧠', avatar: '📚', deskOffset: { x: 40, y: 15 }, isWorking: false },
+  { id: 'dev1', name: 'Claude Opus', role: 'Senior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '💻', avatar: '⚡', deskOffset: { x: -160, y: 25 }, isWorking: false },
+  { id: 'dev2', name: 'Codex', role: 'Senior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '⚡', avatar: '🔧', deskOffset: { x: -55, y: 25 }, isWorking: false },
+  { id: 'dev3', name: 'Kimi K2.5', role: 'Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '🎯', avatar: '🚀', deskOffset: { x: 55, y: 25 }, isWorking: false },
+  { id: 'dev4', name: 'GPT 4.1', role: 'Junior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '🌱', avatar: '📖', deskOffset: { x: 160, y: 25 }, isWorking: false }
 ];
 
 const OfficeCanvas: React.FC = () => {
