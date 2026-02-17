@@ -518,14 +518,23 @@ const OfficeCanvas: React.FC = () => {
         ctx.strokeRect(x + deskW, y, 10, deskH);
       }
 
-      // Zone label on desk - BIGGER
-      ctx.fillStyle = 'rgba(0,0,0,0.7)';
-      ctx.fillRect(x + 10, y + 10, deskW - 20, 36);
+      // Zone label removed from here - drawn on top later
+    };
 
+    const drawZoneLabel = (zone: Zone) => {
+      const deskW = zone.w;
+      const x = zone.x - deskW/2;
+      const y = zone.y - zone.h/2;
+
+      // Label background at top of desk
+      ctx.fillStyle = 'rgba(0,0,0,0.85)';
+      ctx.fillRect(x + 10, y + 8, deskW - 20, 32);
+
+      // Label text
       ctx.fillStyle = zone.color;
-      ctx.font = 'bold 14px sans-serif';
+      ctx.font = 'bold 13px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(zone.label, zone.x, y + 35);
+      ctx.fillText(zone.label, zone.x, y + 30);
     };
 
     const drawWaterCooler = (x: number, y: number) => {
@@ -781,7 +790,7 @@ const OfficeCanvas: React.FC = () => {
         drawDesk(zone);
 
         // Add monitors to desks
-        if (zone.id !== 'meeting') {
+        if (zone.id !== 'meeting' && zone.id !== 'watercooler') {
           drawMonitor(zone.x, zone.y - 10);
         }
       });
@@ -815,6 +824,13 @@ const OfficeCanvas: React.FC = () => {
       ctx.globalAlpha = 1;
 
       agents.forEach(agent => drawWorker(agent, time));
+
+      // Draw zone labels ON TOP of everything
+      Object.values(zones).forEach(zone => {
+        if (zone.id !== 'watercooler') {
+          drawZoneLabel(zone);
+        }
+      });
 
       // Title (clean, no emoji)
       ctx.fillStyle = '#fff';
