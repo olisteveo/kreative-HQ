@@ -856,13 +856,31 @@ const OfficeCanvas: React.FC = () => {
             Click to edit
           </div>
         </div>
+
+        <div className="sidebar-controls">
+          <button onClick={() => setShowTaskForm(true)}>New Task</button>
+          <button onClick={() => setShowMeetingRoom(true)}>Meeting Room</button>
+          <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
+          <button onClick={resetOffice}>Reset</button>
+        </div>
       </div>
 
-      <div className="controls-right">
-        <button onClick={() => setShowTaskForm(true)}>New Task</button>
-        <button onClick={() => setShowMeetingRoom(true)}>Meeting Room</button>
-        <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
-        <button onClick={resetOffice}>Reset</button>
+      <div className="agents-panel">
+        <h3>Team</h3>
+        <div className="agents-grid">
+          {agents.filter(a => a.id !== 'ceo').map(agent => (
+            <div key={agent.id} className={`agent-mini-desk ${agent.isWorking ? 'working' : ''}`}>
+              <div className="mini-desk">
+                <div className="mini-monitor"></div>
+                <div className="mini-status" style={{ background: agent.isWorking ? '#1dd1a1' : '#666' }}></div>
+              </div>
+              <div className="agent-info">
+                <span className="agent-initials">{agent.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}</span>
+                <span className="agent-name-short">{agent.name.split(' ')[0]}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {showTaskForm && (
