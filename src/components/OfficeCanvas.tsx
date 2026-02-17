@@ -810,54 +810,59 @@ const OfficeCanvas: React.FC = () => {
     <div className="office-canvas-container">
       <canvas ref={canvasRef} className="office-canvas" />
 
-      <div className="ui-panel" onClick={() => setShowWhiteboard(true)} style={{ cursor: 'pointer' }}>
-        <h1>Kreative</h1>
-        <p>AI Agency Dashboard</p>
-        <div className="task-log">
-          {taskLog.map((entry, i) => (
-            <div key={i} className="task-entry">{entry}</div>
-          ))}
+      <div className="left-sidebar">
+        <div className="ui-panel" onClick={() => setShowWhiteboard(true)} style={{ cursor: 'pointer' }}>
+          <h1>Kreative</h1>
+          <p>AI Agency Dashboard</p>
+          <div className="task-log">
+            {taskLog.map((entry, i) => (
+              <div key={i} className="task-entry">{entry}</div>
+            ))}
+          </div>
+          <div style={{ marginTop: '10px', fontSize: '11px', color: '#666', textAlign: 'center' }}>
+            Click to open whiteboard
+          </div>
         </div>
-        <div style={{ marginTop: '10px', fontSize: '11px', color: '#666', textAlign: 'center' }}>
-          Click to open whiteboard
+
+        <div className="stats-panel" onClick={() => setShowCostPanel(true)} style={{ cursor: 'pointer' }}>
+          <h3>Active Tasks: {tasks.filter(t => t.status === 'in-progress').length}</h3>
+          <h3>Completed: {tasks.filter(t => t.status === 'completed').length}</h3>
+          <h3>Total Agents: {agents.length}</h3>
+          <div className="cost-summary">
+            <h3>Today's Cost</h3>
+            <div className="cost-amount">${(todayApiCost + getDailySubscriptionShare()).toFixed(4)}</div>
+            <div className="cost-breakdown">
+              <span>API: ${todayApiCost.toFixed(4)}</span>
+              <span>Subs: ${getDailySubscriptionShare().toFixed(2)}/day</span>
+            </div>
+          </div>
+          <div style={{ marginTop: '8px', fontSize: '10px', color: '#888', textAlign: 'center' }}>
+            Click for cost dashboard
+          </div>
+        </div>
+
+        <div className="rules-panel" onClick={() => { setActiveTab('rules'); setShowWhiteboard(true); }}>
+          <h3>Rules</h3>
+          <div className="rules-count">{whiteboardNotes.rules?.length || 0} active</div>
+          <div className="rules-preview">
+            {whiteboardNotes.rules?.slice(0, 3).map((rule, i) => (
+              <div key={i} className="rule-item">• {rule.substring(0, 40)}{rule.length > 40 ? '...' : ''}</div>
+            ))}
+            {(!whiteboardNotes.rules || whiteboardNotes.rules.length === 0) && (
+              <div className="rule-item empty">No rules set</div>
+            )}
+          </div>
+          <div style={{ marginTop: '8px', fontSize: '10px', color: '#888', textAlign: 'center' }}>
+            Click to edit
+          </div>
         </div>
       </div>
 
-      <div className="rules-panel" onClick={() => setActiveTab('rules')}>
-        <h3>Rules</h3>
-        <div className="rules-count">{whiteboardNotes.rules?.length || 0} active</div>
-        <div className="rules-preview">
-          {whiteboardNotes.rules?.slice(0, 3).map((rule, i) => (
-            <div key={i} className="rule-item">• {rule.substring(0, 40)}{rule.length > 40 ? '...' : ''}</div>
-          ))}
-          {(!whiteboardNotes.rules || whiteboardNotes.rules.length === 0) && (
-            <div className="rule-item empty">No rules set</div>
-          )}
-        </div>
-        <div style={{ marginTop: '8px', fontSize: '10px', color: '#888', textAlign: 'center' }}>
-          Click to edit
-        </div>
-      </div>
-
-      <div className="controls">
+      <div className="controls-right">
         <button onClick={() => setShowTaskForm(true)}>New Task</button>
         <button onClick={() => setShowMeetingRoom(true)}>Meeting Room</button>
         <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
         <button onClick={resetOffice}>Reset</button>
-      </div>
-
-      <div className="stats-panel">
-        <h3>Active Tasks: {tasks.filter(t => t.status === 'in-progress').length}</h3>
-        <h3>Completed: {tasks.filter(t => t.status === 'completed').length}</h3>
-        <h3>Total Agents: {agents.length}</h3>
-        <div className="cost-summary" onClick={() => setShowCostPanel(true)}>
-          <h3>Today's Cost</h3>
-          <div className="cost-amount">${(todayApiCost + getDailySubscriptionShare()).toFixed(4)}</div>
-          <div className="cost-breakdown">
-            <span>API: ${todayApiCost.toFixed(4)}</span>
-            <span>Subs: ${getDailySubscriptionShare().toFixed(2)}/day</span>
-          </div>
-        </div>
       </div>
 
       {showTaskForm && (
