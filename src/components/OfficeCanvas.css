@@ -276,7 +276,7 @@
 /* Agents Panel - Right Side */
 .agents-panel {
   position: absolute;
-  top: 20px;
+  top: 80px;
   right: 20px;
   width: 200px;
   background: rgba(0, 0, 0, 0.85);
