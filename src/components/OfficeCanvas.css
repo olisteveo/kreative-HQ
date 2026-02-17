@@ -21,14 +21,14 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 300px;
+  width: 260px;
   z-index: 10;
 }
 
 /* UI Panel (Dashboard) */
 .ui-panel {
   background: rgba(0, 0, 0, 0.85);
-  padding: 20px;
+  padding: 14px;
   border-radius: 16px;
   border: 1px solid #333;
   backdrop-filter: blur(15px);
@@ -43,7 +43,7 @@
 }
 
 .ui-panel h1 {
-  font-size: 28px;
+  font-size: 22px;
   margin-bottom: 8px;
   background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
   -webkit-background-clip: text;
@@ -58,7 +58,7 @@
 }
 
 .task-log {
-  max-height: 150px;
+  max-height: 80px;
   overflow-y: auto;
   font-size: 12px;
   color: #aaa;
@@ -93,7 +93,7 @@
 /* Stats Panel (Cost) */
 .stats-panel {
   background: rgba(0, 0, 0, 0.85);
-  padding: 20px;
+  padding: 14px;
   border-radius: 16px;
   border: 1px solid #333;
   backdrop-filter: blur(15px);
@@ -451,7 +451,7 @@
 .cost-card {
   background: rgba(0, 0, 0, 0.4);
   border-radius: 12px;
-  padding: 20px;
+  padding: 14px;
   text-align: center;
   border: 1px solid #333;
 }
@@ -478,7 +478,7 @@
 }
 
 .cost-value {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: bold;
   color: #fff;
 }
@@ -687,7 +687,7 @@
 .whiteboard-header .close-x {
   background: transparent;
   border: none;
-  font-size: 28px;
+  font-size: 22px;
   color: #666;
   cursor: pointer;
   width: 36px;
@@ -760,7 +760,7 @@
   display: flex;
   gap: 12px;
   margin-bottom: 25px;
-  padding: 20px;
+  padding: 14px;
   background: #f9f9f9;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
@@ -882,7 +882,7 @@
 .session-history-panel {
   background: #f9f9f9;
   border-radius: 8px;
-  padding: 20px;
+  padding: 14px;
   border: 1px solid #e0e0e0;
 }
 
@@ -1063,7 +1063,7 @@
 .chat-messages {
   flex: 1;
   overflow-y: scroll;
-  padding: 20px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -1148,7 +1148,7 @@
 .chat-input-area {
   display: flex;
   gap: 10px;
-  padding: 20px;
+  padding: 14px;
   border-top: 1px solid #333;
   background: rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
@@ -1195,7 +1195,7 @@
 }
 
 .meeting-sidebar {
-  padding: 20px;
+  padding: 14px;
   background: rgba(0, 0, 0, 0.2);
   overflow-y: auto;
 }
