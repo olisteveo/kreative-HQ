@@ -198,7 +198,8 @@ const OfficeCanvas: React.FC = () => {
     goals: [],
     plans: [],
     ideas: [],
-    memos: []
+    memos: [],
+    rules: []
   });
   const [newNote, setNewNote] = useState('');
 
@@ -1133,7 +1134,7 @@ const OfficeCanvas: React.FC = () => {
             
             {/* Tabs */}
             <div className="whiteboard-tabs">
-              {['vision', 'goals', 'plans', 'ideas', 'memos', 'history'].map(tab => (
+              {['vision', 'goals', 'plans', 'ideas', 'memos', 'rules', 'history'].map(tab => (
                 <button
                   key={tab}
                   className={`tab ${activeTab === tab ? 'active' : ''}`}
