@@ -192,11 +192,15 @@ const OfficeCanvas: React.FC = () => {
 
   // Whiteboard state
   const [showWhiteboard, setShowWhiteboard] = useState(false);
-  const [vision, setVision] = useState('');
-  const [goals, setGoals] = useState('');
-  const [plans, setPlans] = useState('');
-  const [memos, setMemos] = useState('');
-  const [ideas, setIdeas] = useState('');
+  const [activeTab, setActiveTab] = useState('vision');
+  const [whiteboardNotes, setWhiteboardNotes] = useState<Record<string, string[]>>({
+    vision: [],
+    goals: [],
+    plans: [],
+    ideas: [],
+    memos: []
+  });
+  const [newNote, setNewNote] = useState('');
 
   const calculateZones = useCallback((width: number, height: number): Record<string, Zone> => {
     return Object.entries(ZONES).reduce((acc, [key, zone]) => ({
@@ -1127,60 +1131,77 @@ const OfficeCanvas: React.FC = () => {
               <button className="close-btn" onClick={() => setShowWhiteboard(false)}>Close</button>
             </div>
             
-            <div className="whiteboard-content">
-              <div className="whiteboard-section">
-                <h3>Vision</h3>
-                <textarea 
-                  value={vision}
-                  onChange={(e) => setVision(e.target.value)}
-                  placeholder="What's the big picture? Where are we going?"
-                />
-              </div>
-              
-              <div className="whiteboard-section">
-                <h3>Goals</h3>
-                <textarea 
-                  value={goals}
-                  onChange={(e) => setGoals(e.target.value)}
-                  placeholder="What do we want to achieve?"
-                />
-              </div>
-              
-              <div className="whiteboard-section">
-                <h3>Plans</h3>
-                <textarea 
-                  value={plans}
-                  onChange={(e) => setPlans(e.target.value)}
-                  placeholder="How will we get there?"
-                />
-              </div>
-              
-              <div className="whiteboard-section">
-                <h3>Ideas</h3>
-                <textarea 
-                  value={ideas}
-                  onChange={(e) => setIdeas(e.target.value)}
-                  placeholder="Brainstorming area..."
-                />
-              </div>
-              
-              <div className="whiteboard-section full-width">
-                <h3>Memos & Notes</h3>
-                <textarea 
-                  value={memos}
-                  onChange={(e) => setMemos(e.target.value)}
-                  placeholder="Quick notes, reminders, messages..."
-                />
-              </div>
-              
-              <div className="whiteboard-section full-width">
-                <h3>Session History</h3>
-                <div className="session-history">
-                  {taskLog.map((entry, i) => (
-                    <div key={i} className="history-entry">{entry}</div>
-                  ))}
+            {/* Tabs */}
+            <div className="whiteboard-tabs">
+              {['vision', 'goals', 'plans', 'ideas', 'memos', 'history'].map(tab => (
+                <button
+                  key={tab}
+                  className={`tab ${activeTab === tab ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+            
+            <div className="whiteboard-canvas">
+              {activeTab === 'history' ? (
+                <div className="session-history-panel">
+                  <h3>Session History</h3>
+                  <div className="history-list">
+                    {taskLog.map((entry, i) => (
+                      <div key={i} className="history-entry">{entry}</div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {/* Add new note */}
+                  <div className="add-note-area">
+                    <textarea
+                      value={newNote}
+                      onChange={(e) => setNewNote(e.target.value)}
+                      placeholder={`Add a new ${activeTab} note...`}
+                      className="note-input"
+                    />
+                    <button 
+                      className="post-btn"
+                      onClick={() => {
+                        if (newNote.trim()) {
+                          setWhiteboardNotes(prev => ({
+                            ...prev,
+                            [activeTab]: [...(prev[activeTab] || []), newNote.trim()]
+                          }));
+                          setNewNote('');
+                        }
+                      }}
+                      disabled={!newNote.trim()}
+                    >
+                      Post Note
+                    </button>
+                  </div>
+                  
+                  {/* Sticky notes grid */}
+                  <div className="sticky-notes-grid">
+                    {whiteboardNotes[activeTab]?.map((note, index) => (
+                      <div key={index} className="sticky-note">
+                        <button 
+                          className="delete-btn"
+                          onClick={() => {
+                            setWhiteboardNotes(prev => ({
+                              ...prev,
+                              [activeTab]: prev[activeTab].filter((_, i) => i !== index)
+                            }));
+                          }}
+                        >
+                          ×
+                        </button>
+                        <p>{note}</p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
