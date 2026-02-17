@@ -258,6 +258,7 @@ const OfficeCanvas: React.FC = () => {
 
   // Settings / Connections state
   const [showSettings, setShowSettings] = useState(false);
+  const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [activeSettingsTab, setActiveSettingsTab] = useState<'providers' | 'desks'>('providers');
   const [connections, setConnections] = useState<Connection[]>([]);
   const [newApiKey, setNewApiKey] = useState('');
@@ -962,7 +963,7 @@ const OfficeCanvas: React.FC = () => {
         <button onClick={() => setShowSettings(true)}>Setup</button>
         <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
         <button onClick={resetOffice}>Reset</button>
-        <div className="user-icon" onClick={() => setShowSettings(true)} title="Account Settings">
+        <div className="user-icon" onClick={() => setShowAccountSettings(true)} title="Account Settings">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -1777,6 +1778,81 @@ const OfficeCanvas: React.FC = () => {
 
             <div className="form-buttons" style={{ marginTop: '20px' }}>
               <button onClick={() => setShowSettings(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Account Settings Modal */}
+      {showAccountSettings && (
+        <div className="task-form-overlay" onClick={() => setShowAccountSettings(false)}>
+          <div className="task-form" onClick={e => e.stopPropagation()} style={{ maxWidth: '400px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2>Account Settings</h2>
+              <button className="close-btn" onClick={() => setShowAccountSettings(false)}>✕</button>
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', color: '#888', fontSize: '13px', marginBottom: '8px' }}>Display Name</label>
+              <input
+                type="text"
+                defaultValue="You"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  background: 'rgba(0,0,0,0.5)',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  color: '#fff'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', color: '#888', fontSize: '13px', marginBottom: '8px' }}>Email</label>
+              <input
+                type="email"
+                placeholder="your@email.com"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  background: 'rgba(0,0,0,0.5)',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  color: '#fff'
+                }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', color: '#888', fontSize: '13px', marginBottom: '8px' }}>Timezone</label>
+              <select style={{ width: '100%', padding: '12px', background: 'rgba(0,0,0,0.5)', border: '1px solid #444', borderRadius: '6px', color: '#fff' }}>
+                <option>UTC</option>
+                <option>GMT+8 (Asia/Shanghai)</option>
+                <option>GMT+0 (London)</option>
+                <option>GMT-5 (New York)</option>
+                <option>GMT-8 (Los Angeles)</option>
+              </select>
+            </div>
+
+            <div style={{ borderTop: '1px solid #333', paddingTop: '20px', marginTop: '20px' }}>
+              <button
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  background: 'transparent',
+                  border: '1px solid #ff6b6b',
+                  borderRadius: '6px',
+                  color: '#ff6b6b',
+                  cursor: 'pointer'
+                }}
+              >
+                Log Out
+              </button>
+            </div>
+
+            <div className="form-buttons" style={{ marginTop: '20px' }}>
+              <button onClick={() => setShowAccountSettings(false)}>Close</button>
             </div>
           </div>
         </div>

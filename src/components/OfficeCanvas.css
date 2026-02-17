@@ -7,13 +7,19 @@
   overflow-y: auto;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   padding-top: 80px;
+  box-sizing: border-box;
 }
 
 .office-canvas {
   display: block;
   width: 100%;
   height: auto;
-  min-height: 800px;
+  min-height: 600px;
+}
+
+/* Ensure content doesn't go under fixed nav */
+.main-content {
+  padding-top: 20px;
 }
 
 /* Left Sidebar - Stacked Panels */
