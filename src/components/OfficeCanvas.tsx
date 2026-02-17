@@ -156,15 +156,17 @@ const AVAILABLE_MODELS = [
 
 // Default desk configuration - users can customize this
 const DEFAULT_DESKS: Zone[] = [
-  { id: 'ceo', x: 0.35, y: 0.12, w: 180, h: 100, color: '#ffd700', label: 'CEO Office' },
-  { id: 'ops', x: 0.65, y: 0.12, w: 180, h: 100, color: '#ff6b6b', label: 'Operations' },
-  { id: 'desk1', x: 0.22, y: 0.35, w: 200, h: 120, color: '#feca57', label: 'Desk 1' },
-  { id: 'desk2', x: 0.50, y: 0.35, w: 200, h: 120, color: '#48dbfb', label: 'Desk 2' },
-  { id: 'desk3', x: 0.78, y: 0.35, w: 200, h: 120, color: '#ff9ff3', label: 'Desk 3' },
-  { id: 'desk4', x: 0.22, y: 0.58, w: 200, h: 120, color: '#54a0ff', label: 'Desk 4' },
-  { id: 'desk5', x: 0.50, y: 0.58, w: 200, h: 120, color: '#1dd1a1', label: 'Desk 5' },
-  { id: 'desk6', x: 0.78, y: 0.58, w: 200, h: 120, color: '#a29bfe', label: 'Desk 6' },
-  { id: 'meeting', x: 0.5, y: 0.82, w: 300, h: 140, color: '#74b9ff', label: 'Meeting Room' }
+  { id: 'ceo', x: 0.35, y: 0.10, w: 160, h: 90, color: '#ffd700', label: 'CEO Office' },
+  { id: 'ops', x: 0.65, y: 0.10, w: 160, h: 90, color: '#ff6b6b', label: 'Operations' },
+  { id: 'desk1', x: 0.20, y: 0.30, w: 180, h: 110, color: '#feca57', label: 'Desk 1' },
+  { id: 'desk2', x: 0.40, y: 0.30, w: 180, h: 110, color: '#48dbfb', label: 'Desk 2' },
+  { id: 'desk3', x: 0.60, y: 0.30, w: 180, h: 110, color: '#ff9ff3', label: 'Desk 3' },
+  { id: 'desk4', x: 0.80, y: 0.30, w: 180, h: 110, color: '#54a0ff', label: 'Desk 4' },
+  { id: 'desk5', x: 0.20, y: 0.52, w: 180, h: 110, color: '#1dd1a1', label: 'Desk 5' },
+  { id: 'desk6', x: 0.40, y: 0.52, w: 180, h: 110, color: '#a29bfe', label: 'Desk 6' },
+  { id: 'desk7', x: 0.60, y: 0.52, w: 180, h: 110, color: '#fd79a8', label: 'Desk 7' },
+  { id: 'desk8', x: 0.80, y: 0.52, w: 180, h: 110, color: '#00b894', label: 'Desk 8' },
+  { id: 'meeting', x: 0.5, y: 0.78, w: 350, h: 130, color: '#74b9ff', label: 'Meeting Room' }
 ];
 
 // Desk to model assignments - users configure this
@@ -179,8 +181,10 @@ const DEFAULT_ASSIGNMENTS: DeskAssignment[] = [
   { deskId: 'desk2', modelId: 'claude-sonnet-4', customName: 'Writing Desk' },
   { deskId: 'desk3', modelId: 'kimi-k2.5', customName: 'Dev Desk' },
   { deskId: 'desk4', modelId: 'gpt-4.1', customName: 'Analysis Desk' },
-  { deskId: 'desk5', modelId: 'codex', customName: 'Code Desk' },
-  { deskId: 'desk6', modelId: 'nano-banana', customName: 'Creative Desk' }
+  { deskId: 'desk5', modelId: 'gpt-4.1-mini', customName: 'Quick Tasks' },
+  { deskId: 'desk6', modelId: 'codex', customName: 'Code Desk' },
+  { deskId: 'desk7', modelId: 'nano-banana', customName: 'Creative Desk' },
+  { deskId: 'desk8', modelId: 'claude-sonnet-4', customName: 'Review Desk' }
 ];
 
 const INITIAL_AGENTS: Agent[] = [
