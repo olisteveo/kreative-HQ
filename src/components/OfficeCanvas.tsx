@@ -143,26 +143,47 @@ const DEFAULT_SUBSCRIPTIONS: Subscription[] = [
   }
 ];
 
-const ZONES: Record<string, Zone> = {
-  ceo: { x: 0.35, y: 0.18, w: 200, h: 110, color: '#ffd700', label: 'CEO Office' },
-  ops: { x: 0.65, y: 0.18, w: 200, h: 110, color: '#ff6b6b', label: 'Operations' },
-  creative: { x: 0.30, y: 0.40, w: 240, h: 140, color: '#feca57', label: 'Creative Studio' },
-  research: { x: 0.70, y: 0.40, w: 240, h: 140, color: '#48dbfb', label: 'Research Lab' },
-  marketing: { x: 0.30, y: 0.64, w: 240, h: 140, color: '#ff9ff3', label: 'Marketing Lab' },
-  reporting: { x: 0.70, y: 0.64, w: 240, h: 140, color: '#54a0ff', label: 'Reporting' },
-  engineering: { x: 0.5, y: 0.90, w: 500, h: 170, color: '#1dd1a1', label: 'Engineering Floor' },
-  meeting: { x: 0.5, y: 0.52, w: 160, h: 100, color: '#a29bfe', label: 'Meeting Room' },
-  watercooler: { x: 0.5, y: 0.65, w: 50, h: 50, color: '#74b9ff', label: '' }
-};
+// Available AI models for desk assignment
+const AVAILABLE_MODELS = [
+  { id: 'claude-opus-4.6', name: 'Claude Opus', provider: 'anthropic', color: '#d4a5a5' },
+  { id: 'claude-sonnet-4', name: 'Claude Sonnet', provider: 'anthropic', color: '#a5b4d4' },
+  { id: 'gpt-4.1', name: 'GPT-4.1', provider: 'openai', color: '#a5d4b4' },
+  { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', provider: 'openai', color: '#d4d4a5' },
+  { id: 'kimi-k2.5', name: 'Kimi K2.5', provider: 'moonshot', color: '#b4a5d4' },
+  { id: 'codex', name: 'Codex', provider: 'openai', color: '#d4a5d4' },
+  { id: 'nano-banana', name: 'Nano Banana', provider: 'custom', color: '#feca57' }
+];
+
+// Default desk configuration - users can customize this
+const DEFAULT_DESKS: Zone[] = [
+  { id: 'ceo', x: 0.35, y: 0.18, w: 200, h: 110, color: '#ffd700', label: 'CEO Office' },
+  { id: 'ops', x: 0.65, y: 0.18, w: 200, h: 110, color: '#ff6b6b', label: 'Operations' },
+  { id: 'desk1', x: 0.30, y: 0.40, w: 220, h: 130, color: '#feca57', label: 'Desk 1' },
+  { id: 'desk2', x: 0.70, y: 0.40, w: 220, h: 130, color: '#48dbfb', label: 'Desk 2' },
+  { id: 'desk3', x: 0.30, y: 0.62, w: 220, h: 130, color: '#ff9ff3', label: 'Desk 3' },
+  { id: 'desk4', x: 0.70, y: 0.62, w: 220, h: 130, color: '#54a0ff', label: 'Desk 4' },
+  { id: 'engineering', x: 0.5, y: 0.88, w: 480, h: 160, color: '#1dd1a1', label: 'Engineering Floor' },
+  { id: 'meeting', x: 0.5, y: 0.52, w: 160, h: 100, color: '#a29bfe', label: 'Meeting Room' },
+  { id: 'watercooler', x: 0.5, y: 0.65, w: 50, h: 50, color: '#74b9ff', label: '' }
+];
+
+// Desk to model assignments - users configure this
+interface DeskAssignment {
+  deskId: string;
+  modelId: string;
+  customName?: string;
+}
+
+const DEFAULT_ASSIGNMENTS: DeskAssignment[] = [
+  { deskId: 'desk1', modelId: 'claude-sonnet-4', customName: 'Research Desk' },
+  { deskId: 'desk2', modelId: 'kimi-k2.5', customName: 'Dev Desk' },
+  { deskId: 'desk3', modelId: 'gpt-4.1', customName: 'Writing Desk' },
+  { deskId: 'desk4', modelId: 'nano-banana', customName: 'Creative Desk' }
+];
 
 const INITIAL_AGENTS: Agent[] = [
   { id: 'ceo', name: 'You', role: 'CEO', zone: 'ceo', x: 0, y: 0, color: '#ffd700', emoji: '👑', avatar: '👔', deskOffset: { x: 0, y: 10 }, isWorking: false },
   { id: 'ops', name: 'OpenClaw', role: 'Operations Manager', zone: 'ops', x: 0, y: 0, color: '#ff6b6b', emoji: '🦅', avatar: '📊', deskOffset: { x: 0, y: 10 }, isWorking: false },
-  { id: 'creative', name: 'Nano Banana', role: 'Creative Manager', zone: 'creative', x: 0, y: 0, color: '#feca57', emoji: '🍌', avatar: '🎨', deskOffset: { x: 0, y: 15 }, isWorking: false },
-  { id: 'research1', name: 'Claude Sonnet', role: 'Researcher', zone: 'research', x: 0, y: 0, color: '#48dbfb', emoji: '🔬', avatar: '🔍', deskOffset: { x: -35, y: 15 }, isWorking: false },
-  { id: 'research2', name: 'Kimi K2.5', role: 'Researcher/Dev', zone: 'research', x: 0, y: 0, color: '#48dbfb', emoji: '🧠', avatar: '📚', deskOffset: { x: 35, y: 15 }, isWorking: false },
-  { id: 'marketing', name: 'GPT 4.1', role: 'Marketing Lead', zone: 'marketing', x: 0, y: 0, color: '#ff9ff3', emoji: '📢', avatar: '📈', deskOffset: { x: 0, y: 15 }, isWorking: false },
-  { id: 'reporting', name: 'Claude Sonnet', role: 'Analytics Lead', zone: 'reporting', x: 0, y: 0, color: '#54a0ff', emoji: '📊', avatar: '📉', deskOffset: { x: 0, y: 15 }, isWorking: false },
   { id: 'dev1', name: 'Claude Opus', role: 'Senior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '💻', avatar: '⚡', deskOffset: { x: -140, y: 25 }, isWorking: false },
   { id: 'dev2', name: 'Codex', role: 'Senior Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '⚡', avatar: '🔧', deskOffset: { x: -48, y: 25 }, isWorking: false },
   { id: 'dev3', name: 'Kimi K2.5', role: 'Developer', zone: 'engineering', x: 0, y: 0, color: '#1dd1a1', emoji: '🎯', avatar: '🚀', deskOffset: { x: 48, y: 25 }, isWorking: false },
@@ -187,6 +208,11 @@ const OfficeCanvas: React.FC = () => {
   const animationRef = useRef<number | undefined>(undefined);
   const dimensionsRef = useRef({ width: 0, height: 0 });
 
+  // Desk configuration state
+  const [desks] = useState<Zone[]>(DEFAULT_DESKS);
+  const [deskAssignments, setDeskAssignments] = useState<DeskAssignment[]>(DEFAULT_ASSIGNMENTS);
+  const [showDeskConfig, setShowDeskConfig] = useState(false);
+
   // Meeting room state
   const [showMeetingRoom, setShowMeetingRoom] = useState(false);
   const [activeMeeting, setActiveMeeting] = useState<Meeting | null>(null);
@@ -209,15 +235,15 @@ const OfficeCanvas: React.FC = () => {
   const [newNote, setNewNote] = useState('');
 
   const calculateZones = useCallback((width: number, height: number): Record<string, Zone> => {
-    return Object.entries(ZONES).reduce((acc, [key, zone]) => ({
+    return desks.reduce((acc, desk) => ({
       ...acc,
-      [key]: {
-        ...zone,
-        x: width * zone.x,
-        y: height * zone.y
+      [desk.id!]: {
+        ...desk,
+        x: width * desk.x,
+        y: height * desk.y
       }
     }), {});
-  }, []);
+  }, [desks]);
 
   const resetAgents = useCallback((width: number, height: number) => {
     const zones = calculateZones(width, height);
@@ -928,6 +954,7 @@ const OfficeCanvas: React.FC = () => {
         <div className="sidebar-controls">
           <button onClick={() => setShowTaskForm(true)}>New Task</button>
           <button onClick={() => setShowMeetingRoom(true)}>Meeting Room</button>
+          <button onClick={() => setShowDeskConfig(true)}>Configure Desks</button>
           <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
           <button onClick={resetOffice}>Reset</button>
         </div>
@@ -1312,6 +1339,77 @@ const OfficeCanvas: React.FC = () => {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Desk Configuration Modal */}
+      {showDeskConfig && (
+        <div className="task-form-overlay" onClick={() => setShowDeskConfig(false)}>
+          <div className="task-form" onClick={e => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+            <h2>Configure Desks</h2>
+            <p style={{ color: '#888', fontSize: '13px', marginBottom: '20px' }}>
+              Assign AI models to desks. Each desk can have one model.
+            </p>
+
+            <div className="form-group">
+              {desks.filter(d => d.id?.startsWith('desk')).map(desk => {
+                const assignment = deskAssignments.find(a => a.deskId === desk.id);
+                const model = AVAILABLE_MODELS.find(m => m.id === assignment?.modelId);
+                return (
+                  <div key={desk.id} style={{ 
+                    background: 'rgba(0,0,0,0.3)', 
+                    padding: '15px', 
+                    borderRadius: '8px',
+                    marginBottom: '12px',
+                    border: '1px solid #333'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <strong style={{ color: desk.color }}>{desk.label}</strong>
+                      <span style={{ fontSize: '12px', color: '#888' }}>ID: {desk.id}</span>
+                    </div>
+                    
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <select 
+                        value={assignment?.modelId || ''}
+                        onChange={(e) => {
+                          const newAssignments = deskAssignments.filter(a => a.deskId !== desk.id);
+                          if (e.target.value) {
+                            newAssignments.push({
+                              deskId: desk.id!,
+                              modelId: e.target.value,
+                              customName: desk.label
+                            });
+                          }
+                          setDeskAssignments(newAssignments);
+                        }}
+                        style={{ flex: 1 }}
+                      >
+                        <option value="">Select Model...</option>
+                        {AVAILABLE_MODELS.map(m => (
+                          <option key={m.id} value={m.id}>{m.name} ({m.provider})</option>
+                        ))}
+                      </select>
+                    </div>
+                    
+                    {model && (
+                      <div style={{ 
+                        marginTop: '10px', 
+                        padding: '8px', 
+                        background: 'rgba(0,0,0,0.3)',
+                        borderRadius: '4px',
+                        fontSize: '12px'
+                      }}>
+                        <span style={{ color: model.color }}>●</span> {model.name} — {model.provider}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="form-buttons">
+              <button onClick={() => setShowDeskConfig(false)}>Done</button>
             </div>
           </div>
         </div>
