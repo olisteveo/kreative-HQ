@@ -19,6 +19,7 @@ interface Agent {
 }
 
 interface Zone {
+  id?: string;
   x: number;
   y: number;
   w: number;
@@ -252,7 +253,7 @@ const OfficeCanvas: React.FC = () => {
 
     const modelId = getModelForAgent(selectedAgent);
     const estimatedCost = calculateTaskCost(modelId);
-    
+
     const newTask: Task = {
       id: `task-${Date.now()}`,
       name: taskTitle,
@@ -263,12 +264,12 @@ const OfficeCanvas: React.FC = () => {
       cost: estimatedCost,
       modelUsed: MODEL_PRICING[modelId]?.name || modelId
     };
-    
+
     setTasks(prev => [...prev, newTask]);
     updateTodayCost(estimatedCost);
-    
+
     const agentName = agents.find(a => a.id === selectedAgent)?.name;
-    addLogEntry(`📋 Task "${taskTitle}" assigned to ${agentName} (${MODEL_PRICING[modelId]?.name}) — Est. $${estimatedCost.toFixed(4)}`);
+    addLogEntry(`📋 Task "${taskTitle}" assigned to ${agentName} (${MODEL_PRICING[modelId]?.name}) - Est. $${estimatedCost.toFixed(4)}`);
 
     setAgents(prev => prev.map(agent => {
       if (agent.id === selectedAgent) {
@@ -296,7 +297,7 @@ const OfficeCanvas: React.FC = () => {
         }
         return agent;
       }));
-      addLogEntry(`${agentName} completed "${taskTitle}" — $${estimatedCost.toFixed(4)}`);
+      addLogEntry(`${agentName} completed "${taskTitle}" - $${estimatedCost.toFixed(4)}`);
     }, 2000);
 
     setShowTaskForm(false);
@@ -381,7 +382,7 @@ const OfficeCanvas: React.FC = () => {
 
     // TODO: Connect to local OpenClaw when available
     // For now, show a placeholder that OpenClaw integration is coming
-    
+
     if (selectedParticipants.includes('ops')) {
       setTimeout(() => {
         const placeholderMessage: ChatMessage = {
@@ -453,111 +454,172 @@ const OfficeCanvas: React.FC = () => {
     let lastTime = 0;
 
     const drawDesk = (zone: Zone) => {
-      // Desk glow
-      ctx.shadowBlur = 30;
-      ctx.shadowColor = zone.color;
-      
-      // Desk body with gradient
-      const gradient = ctx.createLinearGradient(zone.x - zone.w/2, zone.y - zone.h/2, zone.x + zone.w/2, zone.y + zone.h/2);
-      gradient.addColorStop(0, zone.color + '30');
-      gradient.addColorStop(1, zone.color + '10');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(zone.x - zone.w/2, zone.y - zone.h/2, zone.w, zone.h);
-      
-      // Desk border
-      ctx.strokeStyle = zone.color;
-      ctx.lineWidth = 3;
-      ctx.strokeRect(zone.x - zone.w/2, zone.y - zone.h/2, zone.w, zone.h);
-      
-      // Desk label background
+      const deskW = zone.w;
+      const deskH = zone.h;
+      const x = zone.x - deskW/2;
+      const y = zone.y - deskH/2;
+
+      // Desk shadow
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = 'rgba(0,0,0,0.3)';
+      ctx.shadowOffsetY = 10;
+
+      // Desk surface (wood/dark material)
+      const deskGradient = ctx.createLinearGradient(x, y, x, y + deskH);
+      deskGradient.addColorStop(0, '#2a2a3e');
+      deskGradient.addColorStop(0.5, '#1f1f2e');
+      deskGradient.addColorStop(1, '#1a1a2e');
+
+      ctx.fillStyle = deskGradient;
+      ctx.fillRect(x, y, deskW, deskH);
+
+      // Desk border/frame
       ctx.shadowBlur = 0;
-      ctx.fillStyle = '#00000080';
-      ctx.fillRect(zone.x - zone.w/2 + 10, zone.y - zone.h/2 - 35, zone.w - 20, 28);
-      
-      // Desk label
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 13px sans-serif';
+      ctx.shadowOffsetY = 0;
+      ctx.strokeStyle = zone.color + '60';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, deskW, deskH);
+
+      // Desk top highlight
+      ctx.fillStyle = zone.color + '20';
+      ctx.fillRect(x, y, deskW, 4);
+
+      // Partition walls for zones (except meeting room)
+      if (zone.id !== 'meeting') {
+        ctx.fillStyle = '#151520';
+        // Left partition
+        ctx.fillRect(x - 10, y, 10, deskH);
+        ctx.strokeStyle = '#252535';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x - 10, y, 10, deskH);
+
+        // Right partition
+        ctx.fillRect(x + deskW, y, 10, deskH);
+        ctx.strokeRect(x + deskW, y, 10, deskH);
+      }
+
+      // Zone label on desk
+      ctx.fillStyle = 'rgba(0,0,0,0.7)';
+      ctx.fillRect(x + 10, y + 10, deskW - 20, 28);
+
+      ctx.fillStyle = zone.color;
+      ctx.font = 'bold 12px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(zone.label, zone.x, zone.y - zone.h/2 - 15);
+      ctx.fillText(zone.label, zone.x, y + 30);
+    };
+
+    const drawOfficePlant = (x: number, y: number, size: number = 40) => {
+      // Pot
+      ctx.fillStyle = '#8B4513';
+      ctx.beginPath();
+      ctx.moveTo(x - size/3, y);
+      ctx.lineTo(x + size/3, y);
+      ctx.lineTo(x + size/4, y + size/2);
+      ctx.lineTo(x - size/4, y + size/2);
+      ctx.closePath();
+      ctx.fill();
+
+      // Plant leaves
+      ctx.fillStyle = '#228B22';
+      const leaves = [
+        { x: 0, y: -size/2, r: size/3 },
+        { x: -size/4, y: -size/3, r: size/4 },
+        { x: size/4, y: -size/3, r: size/4 },
+        { x: 0, y: -size/4, r: size/5 }
+      ];
+
+      leaves.forEach(leaf => {
+        ctx.beginPath();
+        ctx.arc(x + leaf.x, y + leaf.y, leaf.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    };
+
+    const drawMonitor = (x: number, y: number, width: number = 60, height: number = 40) => {
+      // Monitor stand
+      ctx.fillStyle = '#333';
+      ctx.fillRect(x - 5, y + height/2, 10, 15);
+      ctx.fillRect(x - 15, y + height/2 + 15, 30, 5);
+
+      // Monitor frame
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(x - width/2, y - height/2, width, height);
+
+      // Screen glow
+      const screenGradient = ctx.createLinearGradient(x - width/2, y - height/2, x - width/2, y + height/2);
+      screenGradient.addColorStop(0, '#2a3a4a');
+      screenGradient.addColorStop(1, '#1a2a3a');
+      ctx.fillStyle = screenGradient;
+      ctx.fillRect(x - width/2 + 3, y - height/2 + 3, width - 6, height - 6);
+
+      // Code lines on screen
+      ctx.fillStyle = '#4a9a4a';
+      for (let i = 0; i < 4; i++) {
+        const lineWidth = Math.random() * 30 + 10;
+        ctx.fillRect(x - width/2 + 8, y - height/2 + 8 + i * 7, lineWidth, 2);
+      }
     };
 
     const drawWorker = (agent: Agent, time: number) => {
       const bobOffset = agent.isWorking ? Math.sin(time / 300) * 2 : Math.sin(time / 500) * 3;
-      
-      // Glow when moving or working
-      if (agent.targetX !== undefined || agent.isWorking) {
-        ctx.shadowBlur = 40;
-        ctx.shadowColor = agent.color;
-      }
 
-      // Worker body (rounded rect)
-      ctx.fillStyle = agent.color + '40';
+      // Shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
       ctx.beginPath();
-      ctx.roundRect(agent.x - 30, agent.y + bobOffset - 35, 60, 70, 15);
+      ctx.ellipse(agent.x, agent.y + 35, 25, 8, 0, 0, Math.PI * 2);
       ctx.fill();
-      
-      // Worker border
-      ctx.strokeStyle = agent.color;
-      ctx.lineWidth = 3;
-      ctx.stroke();
 
-      // Avatar circle
-      ctx.fillStyle = '#1a1a2e';
+      // Body (office chair style)
+      ctx.fillStyle = agent.color + '30';
       ctx.beginPath();
-      ctx.arc(agent.x, agent.y + bobOffset - 15, 22, 0, Math.PI * 2);
+      ctx.roundRect(agent.x - 20, agent.y + bobOffset - 10, 40, 35, 8);
       ctx.fill();
+
+      // Head
+      ctx.fillStyle = '#f0d5b8'; // Skin tone
+      ctx.beginPath();
+      ctx.arc(agent.x, agent.y + bobOffset - 25, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hair/outline
       ctx.strokeStyle = agent.color;
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Avatar emoji
-      ctx.shadowBlur = 0;
-      ctx.font = '24px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(agent.avatar, agent.x, agent.y + bobOffset - 8);
-
-      // Name badge
-      ctx.fillStyle = '#00000090';
-      ctx.fillRect(agent.x - 45, agent.y + bobOffset + 15, 90, 22);
-      
+      // Initials instead of emoji
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold 11px sans-serif';
-      ctx.fillText(agent.name, agent.x, agent.y + bobOffset + 30);
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      const initials = agent.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      ctx.fillText(initials, agent.x, agent.y + bobOffset - 20);
 
-      // Role
-      ctx.fillStyle = '#aaa';
-      ctx.font = '9px sans-serif';
-      ctx.fillText(agent.role, agent.x, agent.y + bobOffset + 42);
+      // Name tag (subtle)
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(agent.x - 35, agent.y + bobOffset + 20, 70, 18);
+      ctx.fillStyle = '#fff';
+      ctx.font = '10px sans-serif';
+      ctx.fillText(agent.name, agent.x, agent.y + bobOffset + 32);
 
-      // Status indicator
+      // Status dot (clean, no emoji)
       const statusColor = agent.targetX !== undefined ? '#feca57' : agent.isWorking ? '#ff6b6b' : '#1dd1a1';
       ctx.fillStyle = statusColor;
       ctx.beginPath();
-      ctx.arc(agent.x + 25, agent.y + bobOffset - 30, 8, 0, Math.PI * 2);
+      ctx.arc(agent.x + 22, agent.y + bobOffset - 35, 5, 0, Math.PI * 2);
       ctx.fill();
-      
-      // Status icon
-      ctx.fillStyle = '#fff';
-      ctx.font = '10px sans-serif';
-      const statusIcon = agent.targetX !== undefined ? '🚶' : agent.isWorking ? '⚙️' : '✓';
-      ctx.fillText(statusIcon, agent.x + 25, agent.y + bobOffset - 26);
 
-      // Task indicator
+      // Task indicator (dot only)
       if (agent.currentTask) {
         ctx.fillStyle = '#feca57';
         ctx.beginPath();
-        ctx.arc(agent.x - 25, agent.y + bobOffset - 30, 8, 0, Math.PI * 2);
+        ctx.arc(agent.x - 22, agent.y + bobOffset - 35, 5, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#000';
-        ctx.font = '10px sans-serif';
-        ctx.fillText('📝', agent.x - 25, agent.y + bobOffset - 26);
       }
     };
 
     const drawConnections = () => {
       const ceo = agents.find(a => a.id === 'ceo');
       const ops = agents.find(a => a.id === 'ops');
-      
+
       if (ceo && ops) {
         ctx.strokeStyle = '#ffd70060';
         ctx.lineWidth = 2;
@@ -580,7 +642,7 @@ const OfficeCanvas: React.FC = () => {
           if (dist > 5) {
             const newX = agent.x + (dx / dist) * 4;
             const newY = agent.y + (dy / dist) * 4;
-            
+
             if (Math.random() > 0.6) {
               setParticles(p => [...p, {
                 x: newX, y: newY,
@@ -628,30 +690,73 @@ const OfficeCanvas: React.FC = () => {
       }
 
       const zones = calculateZones(width, height);
-      Object.values(zones).forEach(drawDesk);
+
+      // Draw office floor pattern
+      ctx.fillStyle = '#0d0d14';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw floor tiles
+      ctx.strokeStyle = '#1a1a25';
+      ctx.lineWidth = 1;
+      const tileSize = 100;
+      for (let x = 0; x < width; x += tileSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += tileSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Draw zones with furniture
+      Object.values(zones).forEach(zone => {
+        drawDesk(zone);
+
+        // Add monitors to desks
+        if (zone.id !== 'meeting') {
+          drawMonitor(zone.x, zone.y - 10);
+        }
+      });
+
+      // Draw office plants in corners
+      drawOfficePlant(width * 0.05, height * 0.15, 50);
+      drawOfficePlant(width * 0.95, height * 0.15, 45);
+      drawOfficePlant(width * 0.08, height * 0.85, 55);
+      drawOfficePlant(width * 0.92, height * 0.85, 48);
+
+      // Plants near meeting room
+      if (zones.meeting) {
+        drawOfficePlant(zones.meeting.x - 120, zones.meeting.y, 40);
+        drawOfficePlant(zones.meeting.x + 120, zones.meeting.y, 42);
+      }
+
       drawConnections();
 
       particles.forEach(p => {
         ctx.globalAlpha = p.life;
         ctx.fillStyle = p.color;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
         ctx.fill();
       });
       ctx.globalAlpha = 1;
 
       agents.forEach(agent => drawWorker(agent, time));
 
-      // Title
+      // Title (clean, no emoji)
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold 36px sans-serif';
+      ctx.font = 'bold 32px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('🍌 Kreative HQ', width / 2, 50);
-      
+      ctx.fillText('Kreative HQ', width / 2, 45);
+
       // Subtitle
-      ctx.fillStyle = '#888';
-      ctx.font = '14px sans-serif';
-      ctx.fillText('AI Agency Command Center', width / 2, 75);
+      ctx.fillStyle = '#666';
+      ctx.font = '13px sans-serif';
+      ctx.fillText('AI Agency Operations Center', width / 2, 68);
     };
 
     const loop = (time: number) => {
@@ -677,7 +782,7 @@ const OfficeCanvas: React.FC = () => {
 
   const togglePause = () => {
     setIsPaused(!isPaused);
-    addLogEntry(isPaused ? '▶️ Simulation resumed' : '⏸️ Simulation paused');
+    addLogEntry(isPaused ? 'Simulation resumed' : 'Simulation paused');
   };
 
   const resetOffice = () => {
@@ -685,15 +790,15 @@ const OfficeCanvas: React.FC = () => {
     setAgents(resetAgents(width, height));
     setParticles([]);
     setTasks([]);
-    addLogEntry('🔄 Office reset');
+    addLogEntry('Office reset');
   };
 
   return (
     <div className="office-canvas-container">
       <canvas ref={canvasRef} className="office-canvas" />
-      
+
       <div className="ui-panel">
-        <h1>🍌 Kreative</h1>
+        <h1>Kreative</h1>
         <p>AI Agency Dashboard</p>
         <div className="task-log">
           {taskLog.map((entry, i) => (
@@ -703,18 +808,18 @@ const OfficeCanvas: React.FC = () => {
       </div>
 
       <div className="controls">
-        <button onClick={() => setShowTaskForm(true)}>📋 New Task</button>
-        <button onClick={() => setShowMeetingRoom(true)}>📅 Meeting Room</button>
-        <button onClick={togglePause}>{isPaused ? '▶️ Resume' : '⏸️ Pause'}</button>
-        <button onClick={resetOffice}>🔄 Reset</button>
+        <button onClick={() => setShowTaskForm(true)}>New Task</button>
+        <button onClick={() => setShowMeetingRoom(true)}>Meeting Room</button>
+        <button onClick={togglePause}>{isPaused ? 'Resume' : 'Pause'}</button>
+        <button onClick={resetOffice}>Reset</button>
       </div>
 
       <div className="stats-panel">
-        <h3>🟡 Active Tasks: {tasks.filter(t => t.status === 'in-progress').length}</h3>
-        <h3>✅ Completed: {tasks.filter(t => t.status === 'completed').length}</h3>
-        <h3>👥 Total Agents: {agents.length}</h3>
+        <h3>Active Tasks: {tasks.filter(t => t.status === 'in-progress').length}</h3>
+        <h3>Completed: {tasks.filter(t => t.status === 'completed').length}</h3>
+        <h3>Total Agents: {agents.length}</h3>
         <div className="cost-summary" onClick={() => setShowCostPanel(true)}>
-          <h3>💰 Today's Cost</h3>
+          <h3>Today's Cost</h3>
           <div className="cost-amount">${(todayApiCost + getDailySubscriptionShare()).toFixed(4)}</div>
           <div className="cost-breakdown">
             <span>API: ${todayApiCost.toFixed(4)}</span>
@@ -727,7 +832,7 @@ const OfficeCanvas: React.FC = () => {
         <div className="task-form-overlay">
           <div className="task-form">
             <h2>📋 Create New Task</h2>
-            
+
             <div className="form-group">
               <label>Select Agent:</label>
               <select value={selectedAgent} onChange={(e) => setSelectedAgent(e.target.value)}>
@@ -737,7 +842,7 @@ const OfficeCanvas: React.FC = () => {
                   const pricing = MODEL_PRICING[modelId];
                   return (
                     <option key={agent.id} value={agent.id}>
-                      {agent.avatar} {agent.name} — {pricing?.name} (~${(pricing ? (pricing.input * 1000 + pricing.output * 500) : 0).toFixed(4)}/task)
+                      {agent.avatar} {agent.name} - {pricing?.name} (~${(pricing ? (pricing.input * 1000 + pricing.output * 500) : 0).toFixed(4)}/task)
                     </option>
                   );
                 })}
@@ -754,8 +859,8 @@ const OfficeCanvas: React.FC = () => {
 
             <div className="form-group">
               <label>Task Title:</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={taskTitle}
                 onChange={(e) => setTaskTitle(e.target.value)}
                 placeholder="e.g., Build login API"
@@ -764,7 +869,7 @@ const OfficeCanvas: React.FC = () => {
 
             <div className="form-group">
               <label>Instructions:</label>
-              <textarea 
+              <textarea
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
                 placeholder="Describe what you want the agent to do..."
@@ -949,7 +1054,7 @@ const OfficeCanvas: React.FC = () => {
                       {msg.senderId !== 'system' && (
                         <div className="message-avatar">{msg.senderAvatar}</div>
                       )}
-                      
+
                       <div className="message-content">
                         {msg.senderId !== 'system' && (
                           <div className="message-sender">{msg.senderName}</div>
