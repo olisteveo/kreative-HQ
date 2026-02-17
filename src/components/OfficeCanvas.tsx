@@ -190,6 +190,14 @@ const OfficeCanvas: React.FC = () => {
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Whiteboard state
+  const [showWhiteboard, setShowWhiteboard] = useState(false);
+  const [vision, setVision] = useState('');
+  const [goals, setGoals] = useState('');
+  const [plans, setPlans] = useState('');
+  const [memos, setMemos] = useState('');
+  const [ideas, setIdeas] = useState('');
+
   const calculateZones = useCallback((width: number, height: number): Record<string, Zone> => {
     return Object.entries(ZONES).reduce((acc, [key, zone]) => ({
       ...acc,
@@ -797,13 +805,16 @@ const OfficeCanvas: React.FC = () => {
     <div className="office-canvas-container">
       <canvas ref={canvasRef} className="office-canvas" />
 
-      <div className="ui-panel">
+      <div className="ui-panel" onClick={() => setShowWhiteboard(true)} style={{ cursor: 'pointer' }}>
         <h1>Kreative</h1>
         <p>AI Agency Dashboard</p>
         <div className="task-log">
           {taskLog.map((entry, i) => (
             <div key={i} className="task-entry">{entry}</div>
           ))}
+        </div>
+        <div style={{ marginTop: '10px', fontSize: '11px', color: '#666', textAlign: 'center' }}>
+          Click to open whiteboard
         </div>
       </div>
 
@@ -1100,6 +1111,74 @@ const OfficeCanvas: React.FC = () => {
                       </div>
                     ) : null;
                   })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Whiteboard Modal */}
+      {showWhiteboard && (
+        <div className="whiteboard-overlay" onClick={() => setShowWhiteboard(false)}>
+          <div className="whiteboard" onClick={e => e.stopPropagation()}>
+            <div className="whiteboard-header">
+              <h2>Strategy Whiteboard</h2>
+              <button className="close-btn" onClick={() => setShowWhiteboard(false)}>Close</button>
+            </div>
+            
+            <div className="whiteboard-content">
+              <div className="whiteboard-section">
+                <h3>Vision</h3>
+                <textarea 
+                  value={vision}
+                  onChange={(e) => setVision(e.target.value)}
+                  placeholder="What's the big picture? Where are we going?"
+                />
+              </div>
+              
+              <div className="whiteboard-section">
+                <h3>Goals</h3>
+                <textarea 
+                  value={goals}
+                  onChange={(e) => setGoals(e.target.value)}
+                  placeholder="What do we want to achieve?"
+                />
+              </div>
+              
+              <div className="whiteboard-section">
+                <h3>Plans</h3>
+                <textarea 
+                  value={plans}
+                  onChange={(e) => setPlans(e.target.value)}
+                  placeholder="How will we get there?"
+                />
+              </div>
+              
+              <div className="whiteboard-section">
+                <h3>Ideas</h3>
+                <textarea 
+                  value={ideas}
+                  onChange={(e) => setIdeas(e.target.value)}
+                  placeholder="Brainstorming area..."
+                />
+              </div>
+              
+              <div className="whiteboard-section full-width">
+                <h3>Memos & Notes</h3>
+                <textarea 
+                  value={memos}
+                  onChange={(e) => setMemos(e.target.value)}
+                  placeholder="Quick notes, reminders, messages..."
+                />
+              </div>
+              
+              <div className="whiteboard-section full-width">
+                <h3>Session History</h3>
+                <div className="session-history">
+                  {taskLog.map((entry, i) => (
+                    <div key={i} className="history-entry">{entry}</div>
+                  ))}
                 </div>
               </div>
             </div>
