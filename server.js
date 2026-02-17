@@ -78,9 +78,15 @@ app.post('/api/chat', async (req, res) => {
 
 // Endpoint for OpenClaw to check for new messages
 app.get('/api/messages', (req, res) => {
+  // Return messages but keep them for 5 seconds before clearing
+  // This prevents race conditions with polling
   const messages = [...messageQueue];
-  messageQueue.length = 0; // Clear queue
   res.json(messages);
+  
+  // Clear queue after a short delay
+  setTimeout(() => {
+    messageQueue.length = 0;
+  }, 5000);
 });
 
 // Endpoint for OpenClaw to post responses
