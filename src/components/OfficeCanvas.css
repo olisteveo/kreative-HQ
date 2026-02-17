@@ -132,6 +132,65 @@
   gap: 8px;
 }
 
+/* Rules Panel */
+.rules-panel {
+  position: absolute;
+  top: 20px;
+  left: 380px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 1px solid #444;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  width: 220px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rules-panel:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+
+.rules-panel h3 {
+  margin: 0 0 8px 0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.rules-count {
+  font-size: 12px;
+  color: #667eea;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.rules-preview {
+  max-height: 80px;
+  overflow: hidden;
+}
+
+.rule-item {
+  font-size: 11px;
+  color: #aaa;
+  padding: 3px 0;
+  border-bottom: 1px solid #333;
+  line-height: 1.4;
+}
+
+.rule-item:last-child {
+  border-bottom: none;
+}
+
+.rule-item.empty {
+  color: #666;
+  font-style: italic;
+}
+
 /* Cost Summary in Stats Panel */
 .cost-summary {
   margin-top: 15px;

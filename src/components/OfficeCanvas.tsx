@@ -823,6 +823,22 @@ const OfficeCanvas: React.FC = () => {
         </div>
       </div>
 
+      <div className="rules-panel" onClick={() => setActiveTab('rules')}>
+        <h3>Rules</h3>
+        <div className="rules-count">{whiteboardNotes.rules?.length || 0} active</div>
+        <div className="rules-preview">
+          {whiteboardNotes.rules?.slice(0, 3).map((rule, i) => (
+            <div key={i} className="rule-item">• {rule.substring(0, 40)}{rule.length > 40 ? '...' : ''}</div>
+          ))}
+          {(!whiteboardNotes.rules || whiteboardNotes.rules.length === 0) && (
+            <div className="rule-item empty">No rules set</div>
+          )}
+        </div>
+        <div style={{ marginTop: '8px', fontSize: '10px', color: '#888', textAlign: 'center' }}>
+          Click to edit
+        </div>
+      </div>
+
       <div className="controls">
         <button onClick={() => setShowTaskForm(true)}>New Task</button>
         <button onClick={() => setShowMeetingRoom(true)}>Meeting Room</button>
