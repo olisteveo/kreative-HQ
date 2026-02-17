@@ -25,6 +25,26 @@
               └──────────┘          └──────────┘          └──────────┘
 ```
 
+## Key Architecture Decisions (2026-02-18)
+
+### Desk System Design
+- **Default state:** CEO Office, Operations, Meeting Room only
+- **User-created desks:** 0-6 max, only creatable when AI providers connected
+- **Desk-to-model assignment:** Each desk assigned one AI model from connected providers
+- **No preset desks:** Users build their own workspace layout
+
+### Settings/Connection Flow
+1. **Settings Modal** with two tabs:
+   - **AI Providers:** Add/remove API keys (OpenAI, Anthropic, Moonshot, etc.)
+   - **Desk Management:** Create desks (max 6), assign models to desks
+2. **Connection-gated:** Desk creation disabled until at least one provider connected
+3. **Model availability:** Only models from connected providers shown in assignment dropdown
+
+### UI Layout
+- **Scrollable canvas:** Vertical scroll for unlimited desk expansion
+- **2-column layout:** CEO/Ops top, desks in pairs below, Meeting Room at bottom
+- **Responsive:** Canvas min-height 1200px, scales with content
+
 ## Core Components
 
 ### 1. Backend API (Node.js/TypeScript)
@@ -253,6 +273,58 @@ async function checkBudget(teamId: string, estimatedCost: number) {
   }
 }
 ```
+
+## Difficulty Assessment & Feasibility (Updated 2026-02-18)
+
+### Critical Challenges (Ranked by Risk)
+
+| Challenge | Risk Level | Mitigation Strategy | Effort |
+|-----------|------------|---------------------|--------|
+| **Real-time cost tracking** | High | Providers have incompatible APIs. Start with OpenAI only, use webhook + polling hybrid. Accept 5-10 min delay for non-OpenAI. | 2-3 weeks |
+| **API key security** | High | Encrypt at rest (AES-256-GCM), never log, rotate quarterly, use HashiCorp Vault in production. | 1 week |
+| **Multi-tenant data isolation** | High | Row-level security in Postgres, strict middleware validation, separate connection pools per tenant in v2. | 2 weeks |
+| **Provider rate limiting** | Medium | Implement token bucket per team, graceful degradation, queue + retry with exponential backoff. | 1 week |
+| **WebSocket scaling** | Medium | Redis pub/sub for multi-server, fallback to SSE, start single-server. | 3-4 days |
+| **Billing accuracy** | Medium | Stripe for subscriptions, daily cost reconciliation job, manual adjustment capability. | 1 week |
+
+### Feasibility Verdict
+
+**MVP (OpenAI only):** ✅ **Doable in 8-10 weeks**
+- Single provider = no cost tracking complexity
+- Basic encryption sufficient for beta
+- Single-server deployment
+- Stripe checkout + subscription management
+
+**v1.0 (Multi-provider):** ⚠️ **12-16 weeks**
+- Cost aggregation across providers is hard
+- Need robust error handling for provider failures
+- Compliance requirements (SOC2) add 2-4 weeks
+
+**Scale (Enterprise):** 🔴 **6+ months**
+- Multi-region, SLA guarantees
+- Advanced security (Vault, HSM)
+- Custom contracts, invoicing
+
+### Recommended Phases
+
+**Phase 1: MVP (Weeks 1-8)**
+- [ ] Auth + team management
+- [ ] OpenAI integration only
+- [ ] Basic cost tracking (daily batch)
+- [ ] 6 desk max, simple assignment
+- [ ] Stripe $29/mo Pro tier
+
+**Phase 2: Multi-provider (Weeks 9-16)**
+- [ ] Anthropic + Moonshot
+- [ ] Real-time cost dashboard
+- [ ] WebSocket office sync
+- [ ] Advanced desk customization
+
+**Phase 3: Enterprise (Months 5-6)**
+- [ ] SOC2 compliance
+- [ ] On-premise option
+- [ ] API access for teams
+- [ ] Custom contracts
 
 ### 5. Frontend Changes for SaaS
 
